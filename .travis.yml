@@ -9,7 +9,7 @@ install:
 script:
   - npm run lint --workspaces
   - npm run test --workspaces
-  - npm run build --workspaces --if-present
+  - npm run build --workspace=frontend
   - npm run cdk deploy -- --all
 deploy:
   provider: pages
