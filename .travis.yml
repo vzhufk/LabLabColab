@@ -6,26 +6,15 @@ cache:
     - ~/.npm
 install:
   - npm install
-# Following Envs need to be set:
-# AWS_ACCESS_KEY_ID, AWS_ACCOUNT_NUMBER, AWS_DEFAULT_REGION, AWS_SECRET_ACCESS_KEY, CDK_DEFAULT_ACCOUNT, CDK_DEFAULT_REGION
-jobs:
-  include:
-    - stage: Lint
-      name: Run lining rules
-      script: 
-        - npm run lint --workspaces
-    - stage: Test
-      name: Running unit test
-      script:
-        - npm run test --workspaces
-    - stage: Build
-      name: Run build for assets of packages
-      script:
-        - npm run build --workspaces --if-present
-    - stage: Deploy
-      name: Deploy to AWS Cloud
-      script:
-        - npm run cdk deploy -- --all
-
-after_failure:
-  - cat dist/newman/report.json
+script:
+  - npm run lint --workspaces
+  - npm run test --workspaces
+  - npm run build --workspaces --if-present
+  - npm run cdk deploy -- --all
+deploy:
+  provider: pages
+  skip_cleanup: true
+  github_token: $GITHUB_TOKEN
+  local_dir: frontend/build
+  on:
+    branch: main
