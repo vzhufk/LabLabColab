@@ -10,8 +10,8 @@ script:
   - npm run lint --workspaces
   - npm run test --workspaces
   - npm run build --workspace=frontend
-  - npm run cdk bootstrap
-  - npm run cdk deploy -- --all
+  # - npm run cdk bootstrap
+  # - npm run cdk deploy -- --all
 deploy:
   provider: pages
   skip_cleanup: true
