@@ -1,6 +1,7 @@
 language: node_js
 sudo: required
-node_js: v18
+node_js: 
+  - 20
 
 before_install:
   - npm install
