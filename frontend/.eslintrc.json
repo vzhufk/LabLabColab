@@ -13,5 +13,6 @@
   },
   "plugins": ["react", "react-hooks"],
   "rules": {
+    "no-unused-vars": "warn"
   }
 }  
