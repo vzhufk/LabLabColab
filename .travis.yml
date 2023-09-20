@@ -1,6 +1,11 @@
 language: node_js
 node_js:
   - 16
+env:
+ - AWS_ACCESS_KEY_ID=$AWS_ACCESS_KEY_ID
+ - AWS_ACCOUNT_NUMBER=$AWS_ACCOUNT_NUMBER
+ - AWS_DEFAULT_REGION=$AWS_DEFAULT_REGION
+ - AWS_SECRET_ACCESS_KEY=$AWS_SECRET_ACCESS_KEY
 cache:
   directories:
     - ~/.npm
