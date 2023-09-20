@@ -13,11 +13,11 @@ jobs:
     - stage: Lint
       name: Run lining rules
       script: 
-        - npm run lint
+        - npm run lint --workspaces
     - stage: Test
       name: Running unit test
       script:
-        - npm run test
+        - npm run test --workspaces
     - stage: Deploy
       name: Deploy to AWS Cloud
       script:

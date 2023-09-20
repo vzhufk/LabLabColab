@@ -4,15 +4,16 @@
   "bin": {
     "masters-app": "bin/masters-app.js"
   },
+  "workspaces": [
+    "backend",
+    "frontend"
+  ],
   "scripts": {
     "build": "tsc",
     "watch": "tsc -w",
-    "test": "lerna run test",
-    "cdk": "cdk",
-    "lint": "lerna run lint"
+    "cdk": "cdk"
   },
   "devDependencies": {
-    "lerna": "^7.3.0"
   },
   "dependencies": {}
 }
