@@ -18,10 +18,14 @@ jobs:
       name: Running unit test
       script:
         - npm run test --workspaces
+    - stage: Build
+      name: Run build for assets of packages
+      script:
+        - npm run build --workspaces --if-present
     - stage: Deploy
       name: Deploy to AWS Cloud
       script:
-        - npm run cdk deploy --all
+        - npm run cdk deploy -- --all
 
 after_failure:
   - cat dist/newman/report.json
