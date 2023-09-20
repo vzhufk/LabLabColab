@@ -14,7 +14,6 @@ script:
   # - npm run cdk deploy -- --all
 deploy:
   provider: pages
-  skip_cleanup: true
   github_token: $GITHUB_TOKEN
   local_dir: frontend/build
   on:
