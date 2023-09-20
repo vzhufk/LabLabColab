@@ -1,7 +1,11 @@
 dist: bionic
 language: node_js
 node_js: 
-  - 18
+  - node
+  - lts/*
+cache:
+  directories:
+    - ~/.npm
 install:
   - npm install
 # Following Envs need to be set:
