@@ -1,15 +1,9 @@
 dist: bionic
 language: node_js
-sudo: required
 node_js: 
-  - 20
-
-before_install:
+  - 18
+install:
   - npm install
-
-stages:
-  - name: Deploy Test
-
 # Following Envs need to be set:
 # AWS_ACCESS_KEY_ID, AWS_ACCOUNT_NUMBER, AWS_DEFAULT_REGION, AWS_SECRET_ACCESS_KEY, CDK_DEFAULT_ACCOUNT, CDK_DEFAULT_REGION
 jobs:
