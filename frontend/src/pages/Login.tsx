@@ -11,7 +11,7 @@ import Box from '@mui/material/Box';
 import Grid from '@mui/material/Grid';
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import Typography from '@mui/material/Typography';
-import { Copyright } from '@mui/icons-material';
+import { Copyright } from '../components/Copyright';
 
 export const LogInSide = () => {
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
