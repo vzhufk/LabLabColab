@@ -1,14 +1,13 @@
-# Welcome to your CDK TypeScript project
+# :seedling: [Lab Lab Colab](https://vzhufk.github.io/LabLabColab/) [![Build Status](https://app.travis-ci.com/vzhufk/LabLabColab.svg?branch=main)](https://app.travis-ci.com/vzhufk/LabLabColab)
+[Web Site](https://vzhufk.github.io/LabLabColab/)
 
-This is a blank project for CDK development with TypeScript.
+The master thesis by Vadym Zhufiak
 
-The `cdk.json` file tells the CDK Toolkit how to execute your app.
-
-## Useful commands
-
-* `npm run build`   compile typescript to js
-* `npm run watch`   watch for changes and compile
-* `npm run test`    perform the jest unit tests
-* `cdk deploy`      deploy this stack to your default AWS account/region
-* `cdk diff`        compare deployed stack with current state
-* `cdk synth`       emits the synthesized CloudFormation template
+## Idea
+Is to create an app which would allow to distribute labs between students by teacher. 
+Core features:
+ - Group users into classes
+ - Distribute tasks between each student
+ - Create test cases for labs
+ - Ability to run test cases against submitted solution by student
+ - Use Python as run environment 
