@@ -2,7 +2,6 @@ import * as cdk from 'aws-cdk-lib';
 import { Construct } from 'constructs';
 import { UserPoolStack } from './user-pool';
 import { LambdasStack } from './lambdas';
-import { WebStack } from './web';
 
 export class AppStack extends cdk.Stack {
   constructor(scope: Construct, id: string, props?: cdk.StackProps) {
@@ -10,6 +9,5 @@ export class AppStack extends cdk.Stack {
 
     const userPool = new UserPoolStack(this, 'CognitoStack');
     const lambdas = new LambdasStack(this, 'LambdasStack');
-    // const web = new WebStack(this, 'WebStack');
   }
 }
