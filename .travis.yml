@@ -10,7 +10,7 @@ script:
   - npm run lint --workspaces
   - npm run test --workspaces
   - npm run build --workspace=frontend
-  - npm run cdk -- bootstrap aws://129988434354/eu-central-1
+  - npm run cdk -- bootstrap aws://129988434354/eu-central-1 --verbose
   # - npm run cdk -- deploy --all
 deploy:
   provider: pages
