@@ -4,13 +4,17 @@ node_js:
 cache:
   directories:
     - ~/.npm
+before_install:
+  - sudo apt-get install jq  # Install jq using apt-get
 install:
   - npm install
 script:
   - npm run lint --workspaces
   - npm run test --workspaces
+  - npm run cdk -- deploy --all --outputs-file ./cdk-outputs.json
+  - export REACT_APP_AWS_COGNITO_USER_POOL_ID=$(jq -r '.CognitoStack.userPoolId' cdk-outputs.json)
+  - export REACT_APP_AWS_COGNITO_USER_POOL_APP_CLIENT_ID=$(jq -r '.CognitoStack.userPoolClientId' cdk-outputs.json)
   - npm run build --workspace=frontend
-  - npm run cdk -- deploy --all
 deploy:
   provider: pages
   skip_cleanup: true

@@ -84,6 +84,13 @@ export const LogInSide = () => {
               autoComplete="current-password"
             />
             <FormControlLabel control={<Checkbox value="remember" color="primary" />} label="Remember me" />
+            <Grid container>
+              <Box>
+                {mutation.isError ? (
+                  <Typography color="error">Error: {mutation.error?.message}</Typography>
+                ) : null}
+              </Box>
+            </Grid>
             <Button type="submit" fullWidth variant="contained" sx={{ mt: 3, mb: 2 }}>
               { mutation.isLoading ? <CircularProgress/>: 'Sign In' } 
             </Button>

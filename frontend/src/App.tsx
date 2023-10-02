@@ -4,6 +4,10 @@ import { Route, Routes } from 'react-router-dom';
 import './App.css';
 import { LogInSide } from './pages/Login';
 import Dashboard from './pages/Dashboard';
+import { QueryClient, QueryClientProvider } from 'react-query';
+import AuthProvider from './context/auth';
+
+const queryClient = new QueryClient();
 
 export const theme = createTheme({
   palette: {
@@ -20,10 +24,14 @@ export const theme = createTheme({
 function App() {
   return (
     <ThemeProvider theme={theme}>
-      <Routes>
-        <Route path="/" element={<LogInSide />} />
-        <Route path="/dashboard" element={<Dashboard />} />
-      </Routes>
+      <QueryClientProvider client={queryClient}>
+        <AuthProvider>
+          <Routes>
+            <Route path="/" element={<LogInSide />} />
+            <Route path="/dashboard" element={<Dashboard />} />
+          </Routes>
+        </AuthProvider>
+      </QueryClientProvider>
     </ThemeProvider>
   );
 }

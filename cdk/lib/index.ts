@@ -7,7 +7,7 @@ export class AppStack extends cdk.Stack {
   constructor(scope: Construct, id: string, props?: cdk.StackProps) {
     super(scope, id, props);
 
-    const userPool = new UserPoolStack(this, 'CognitoStack');
-    const lambdas = new LambdasStack(this, 'LambdasStack');
+    const userPool = new UserPoolStack(this, 'CognitoStack', { stackName: 'CognitoStack' });
+    const lambdas = new LambdasStack(this, 'LambdasStack', { stackName: 'LambdasStack' });
   }
 }
