@@ -10,30 +10,30 @@ import AuthProvider from './context/auth';
 const queryClient = new QueryClient();
 
 export const theme = createTheme({
-  palette: {
-    mode: 'dark',
-    primary: {
-      main: '#eeff41'
-    },
-    secondary: {
-      main: '#e040fb'
-    }
-  }
+	palette: {
+		mode: 'dark',
+		primary: {
+			main: '#eeff41'
+		},
+		secondary: {
+			main: '#e040fb'
+		}
+	}
 });
 
 function App() {
-  return (
-    <ThemeProvider theme={theme}>
-      <QueryClientProvider client={queryClient}>
-        <AuthProvider>
-          <Routes>
-            <Route path="/" element={<LogInSide />} />
-            <Route path="/dashboard" element={<Dashboard />} />
-          </Routes>
-        </AuthProvider>
-      </QueryClientProvider>
-    </ThemeProvider>
-  );
+	return (
+		<ThemeProvider theme={theme}>
+			<QueryClientProvider client={queryClient}>
+				<AuthProvider>
+					<Routes>
+						<Route path="/" element={<LogInSide />} />
+						<Route path="/dashboard" element={<Dashboard />} />
+					</Routes>
+				</AuthProvider>
+			</QueryClientProvider>
+		</ThemeProvider>
+	);
 }
 
 export default App;
