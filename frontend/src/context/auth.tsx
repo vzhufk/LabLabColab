@@ -20,7 +20,7 @@ export interface IAuth {
   getSession?: any
   sendCode?: any
   forgotPassword?: any
-  changePassword?: any
+  changePassword: (oldPassword: string, newPassword: string) => Promise<void>
   getAttributes?: any
   setAttribute?: any
 }

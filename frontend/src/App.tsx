@@ -6,6 +6,7 @@ import { LogInSide } from './pages/Login';
 import Dashboard from './pages/Dashboard';
 import { QueryClient, QueryClientProvider } from 'react-query';
 import AuthProvider from './context/auth';
+import { ChangePassword } from './pages/ChangePassword';
 
 const queryClient = new QueryClient();
 
@@ -28,6 +29,7 @@ function App() {
 				<AuthProvider>
 					<Routes>
 						<Route path="/" element={<LogInSide />} />
+						<Route path="/password" element={<ChangePassword />} />
 						<Route path="/dashboard" element={<Dashboard />} />
 					</Routes>
 				</AuthProvider>

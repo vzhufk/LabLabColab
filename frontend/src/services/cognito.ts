@@ -1,202 +1,228 @@
-/* eslint-disable */
-import { AuthenticationDetails, CognitoUser, CognitoUserAttribute, CognitoUserPool } from 'amazon-cognito-identity-js'
-import config from '../config'
+import { AuthenticationDetails, CognitoUser, CognitoUserAttribute, CognitoUserPool, ICognitoUserAttributeData } from 'amazon-cognito-identity-js';
+import config from '../config';
 
 const userPoolId = config.USER_POOL_ID;
 const clientId = config.USER_POOL_APP_CLIENT_ID;
 
-console.log(`userpool id=${userPoolId}`)
-console.log(`client id=${clientId}`)
-
 const poolData = {
-  UserPoolId: `${userPoolId}`,
-  ClientId: `${clientId}`,
-}
+	UserPoolId: `${userPoolId}`,
+	ClientId: `${clientId}`,
+};
 
-const userPool: CognitoUserPool = new CognitoUserPool(poolData)
+const userPool: CognitoUserPool = new CognitoUserPool(poolData);
 
-let currentUser: any = userPool.getCurrentUser()
+let currentUser: CognitoUser | null = userPool.getCurrentUser();
 
-export function getCurrentUser() {
-  return currentUser
-}
 
-function getCognitoUser(username: string) {
-  const userData = {
-    Username: username,
-    Pool: userPool,
-  }
-  const cognitoUser = new CognitoUser(userData)
+export const TRANSITION_STATES = {
+	FORCE_CHANGE_PASSWORD: 'FORCE_CHANGE_PASSWORD'
+};
 
-  return cognitoUser
-}
+console.log('userPoolId', userPoolId);
 
-export async function getSession() {
-  if (!currentUser) {
-    currentUser = userPool.getCurrentUser()
-  }
+export const getCurrentUser = (): CognitoUser | null => {
+	return currentUser;
+};
 
-  return new Promise(function (resolve, reject) {
-    currentUser.getSession(function (err: any, session: any) {
-      if (err) {
-        reject(err)
-      } else {
-        resolve(session)
-      }
-    })
-  }).catch((err) => {
-    throw err
-  })
-}
+const getCognitoUser = (username: string): CognitoUser => {
+	const userData = {
+		Username: username,
+		Pool: userPool,
+	};
+	const cognitoUser = new CognitoUser(userData);
 
-export async function signUpUserWithEmail(username: string, email: string, password: string) {
-  return new Promise(function (resolve, reject) {
-    const attributeList = [
-      new CognitoUserAttribute({
-        Name: 'email',
-        Value: email,
-      }),
-    ]
+	return cognitoUser;
+};
 
-    userPool.signUp(username, password, attributeList, [], function (err, res) {
-      if (err) {
-        reject(err)
-      } else {
-        resolve(res)
-      }
-    })
-  }).catch((err) => {
-    throw err
-  })
-}
+export const getSession = async (): Promise<unknown> => {
+	if (!currentUser) {
+		currentUser = userPool.getCurrentUser();
+	}
 
-export async function verifyCode(username: string, code: string) {
-  return new Promise(function (resolve, reject) {
-    const cognitoUser = getCognitoUser(username)
+	return new Promise(function (resolve, reject) {
+		if (!currentUser) {
+			reject('could not find');
+			return;
+		}
+    
+		currentUser?.getSession(function (err: Error, session: unknown) {
+			if (err) {
+				reject(err);
+			} else {
+				resolve(session);
+			}
+		});
+	}).catch((err) => {
+		throw err;
+	});
+};
 
-    cognitoUser.confirmRegistration(code, true, function (err, result) {
-      if (err) {
-        reject(err)
-      } else {
-        resolve(result)
-      }
-    })
-  }).catch((err) => {
-    throw err
-  })
-}
+export const signUpUserWithEmail = async (username: string, email: string, password: string): Promise<unknown> => {
+	return new Promise(function (resolve, reject) {
+		const attributeList = [
+			new CognitoUserAttribute({
+				Name: 'email',
+				Value: email,
+			}),
+		];
 
-export async function signInWithEmail(username: string, password: string) {
-  return new Promise(function (resolve, reject) {
-    const authenticationData = {
-      Username: username,
-      Password: password,
-    }
-    const authenticationDetails = new AuthenticationDetails(authenticationData)
+		userPool.signUp(username, password, attributeList, [], function (err, res) {
+			if (err) {
+				reject(err);
+			} else {
+				resolve(res);
+			}
+		});
+	}).catch((err) => {
+		throw err;
+	});
+};
 
-    currentUser = getCognitoUser(username)
+export const verifyCode = async (username: string, code: string): Promise<unknown> => {
+	return new Promise(function (resolve, reject) {
+		const cognitoUser = getCognitoUser(username);
 
-    currentUser.authenticateUser(authenticationDetails, {
-      onSuccess: function (res: any) {
-        resolve(res)
-      },
-      onFailure: function (err: any) {
-        reject(err)
-      },
-    })
-  }).catch((err) => {
-    throw err
-  })
-}
+		cognitoUser.confirmRegistration(code, true, function (err, result) {
+			if (err) {
+				reject(err);
+			} else {
+				resolve(result);
+			}
+		});
+	}).catch((err) => {
+		throw err;
+	});
+};
 
-export function signOut() {
-  if (currentUser) {
-    currentUser.signOut()
-  }
-}
+export const signInWithEmail = async (username: string, password: string): Promise<unknown> => {
+	return new Promise(function (resolve, reject) {
+		const authenticationData = {
+			Username: username,
+			Password: password,
+		};
+		const authenticationDetails = new AuthenticationDetails(authenticationData);
 
-export async function getAttributes() {
-  return new Promise(function (resolve, reject) {
-    currentUser.getUserAttributes(function (err: any, attributes: any) {
-      if (err) {
-        reject(err)
-      } else {
-        resolve(attributes)
-      }
-    })
-  }).catch((err) => {
-    throw err
-  })
-}
+		currentUser = getCognitoUser(username);
 
-export async function setAttribute(attribute: any) {
-  return new Promise(function (resolve, reject) {
-    const attributeList = []
-    const res = new CognitoUserAttribute(attribute)
-    attributeList.push(res)
+		currentUser.authenticateUser(authenticationDetails, {
+			onSuccess: function (res) {
+				resolve(res);
+			},
+			onFailure: function (err) {
+				reject(err);
+			},
+			newPasswordRequired: () => {
+				reject({ message: TRANSITION_STATES.FORCE_CHANGE_PASSWORD });
+			}
+		});
+	}).catch((err) => {
+		throw err;
+	});
+};
 
-    currentUser.updateAttributes(attributeList, (err: any, res: any) => {
-      if (err) {
-        reject(err)
-      } else {
-        resolve(res)
-      }
-    })
-  }).catch((err) => {
-    throw err
-  })
-}
+export const signOut = (): void => {
+	if (currentUser) {
+		currentUser.signOut();
+	}
+};
 
-export async function sendCode(username: string) {
-  return new Promise(function (resolve, reject) {
-    const cognitoUser = getCognitoUser(username)
+export const getAttributes = async (): Promise<unknown> => {
+	return new Promise(function (resolve, reject) {
+		if (!currentUser) {
+			reject('could not find');
+			return;
+		}
 
-    if (!cognitoUser) {
-      reject(`could not find ${username}`)
-      return
-    }
+		currentUser.getUserAttributes(function (err, attributes) {
+			if (err) {
+				reject(err);
+			} else {
+				resolve(attributes);
+			}
+		});
+	}).catch((err) => {
+		throw err;
+	});
+};
 
-    cognitoUser.forgotPassword({
-      onSuccess: function (res) {
-        resolve(res)
-      },
-      onFailure: function (err) {
-        reject(err)
-      },
-    })
-  }).catch((err) => {
-    throw err
-  })
-}
+export const setAttribute = async (attribute: ICognitoUserAttributeData): Promise<unknown> => {
+	return new Promise(function (resolve, reject) {
+		const attributeList = [];
+		const res = new CognitoUserAttribute(attribute);
+		attributeList.push(res);
 
-export async function forgotPassword(username: string, code: string, password: string) {
-  return new Promise(function (resolve, reject) {
-    const cognitoUser = getCognitoUser(username)
+		if (!currentUser) {
+			reject('could not find');
+			return;
+		}
 
-    if (!cognitoUser) {
-      reject(`could not find ${username}`)
-      return
-    }
+		currentUser.updateAttributes(attributeList, (err, res) => {
+			if (err) {
+				reject(err);
+			} else {
+				resolve(res);
+			}
+		});
+	}).catch((err) => {
+		throw err;
+	});
+};
 
-    cognitoUser.confirmPassword(code, password, {
-      onSuccess: function () {
-        resolve('password updated')
-      },
-      onFailure: function (err) {
-        reject(err)
-      },
-    })
-  })
-}
+export const sendCode = async (username: string): Promise<unknown> => {
+	return new Promise(function (resolve, reject) {
+		const cognitoUser = getCognitoUser(username);
 
-export async function changePassword(oldPassword: string, newPassword: string) {
-  return new Promise(function (resolve, reject) {
-    currentUser.changePassword(oldPassword, newPassword, function (err: any, res: any) {
-      if (err) {
-        reject(err)
-      } else {
-        resolve(res)
-      }
-    })
-  })
-}
+		if (!cognitoUser) {
+			reject(`could not find ${username}`);
+			return;
+		}
+
+		cognitoUser.forgotPassword({
+			onSuccess: function (res) {
+				resolve(res);
+			},
+			onFailure: function (err) {
+				reject(err);
+			},
+		});
+	}).catch((err) => {
+		throw err;
+	});
+};
+
+export const forgotPassword = async (username: string, code: string, password: string): Promise<unknown> => {
+	return new Promise(function (resolve, reject) {
+		const cognitoUser = getCognitoUser(username);
+
+		if (!cognitoUser) {
+			reject(`could not find ${username}`);
+			return;
+		}
+
+		cognitoUser.confirmPassword(code, password, {
+			onSuccess: function () {
+				resolve('password updated');
+			},
+			onFailure: function (err) {
+				reject(err);
+			},
+		});
+	});
+};
+
+export const changePassword = async (oldPassword: string, newPassword: string): Promise<unknown> => {
+	return new Promise(function (resolve, reject) {
+		if (!currentUser) {
+			reject('could not find');
+			return;
+		}
+
+		currentUser.changePassword(oldPassword, newPassword, function (err, res) {
+			if (err) {
+				reject(err);
+			} else {
+				resolve(res);
+			}
+		});
+	});
+};
