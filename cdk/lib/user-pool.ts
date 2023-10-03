@@ -13,6 +13,22 @@ export class UserPoolStack extends cdk.Stack {
         email: true,
       },
       selfSignUpEnabled: false,
+      signInCaseSensitive: false,
+      removalPolicy: cdk.RemovalPolicy.RETAIN,
+      standardAttributes: {
+        givenName: {
+          mutable: true,
+          required: true,
+        },
+        middleName: {
+          mutable: true,
+          required: false,
+        },
+        familyName: {
+          mutable: true,
+          required: true,
+        }
+      }
     });
     const client = this.userPool.addClient('web-client');
 
