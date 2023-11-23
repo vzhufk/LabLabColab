@@ -10,3 +10,7 @@ export type StrapiError = {
 export type StrapiBody<T> = {
   data: StrapiData<T>;
 }
+
+export type StrapiList<T> = {
+    data: StrapiData<T>[];
+}

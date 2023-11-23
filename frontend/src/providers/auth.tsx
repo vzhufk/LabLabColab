@@ -10,6 +10,7 @@ export type AuthorizerContextProps = {
   client: Axios;
   user: User;
   token: string;
+  logout: () => void;
 };
 // Create a new context for the authorization
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -21,6 +22,10 @@ const AuthProvider = ({ children }: { children: React.ReactNode}) => {
 	const [token, setToken] = useState<string>('');
 	const [user, setUser] = useState<User>(predefinedUser ? JSON.parse(predefinedUser) : {});
 	const [axios] = useState<Axios>(new Axios({ baseURL: config.API_URL }));
+	const logout = () => {
+		setToken('');
+		localStorage.removeItem('token');
+	};
 
 	useEffect(() => {
 		const localToken = localStorage.getItem('token');
@@ -54,7 +59,7 @@ const AuthProvider = ({ children }: { children: React.ReactNode}) => {
 		return response;
 	});
 
-	return <AuthContext.Provider value={{ token, client: axios, user }}>{children}</AuthContext.Provider>;
+	return <AuthContext.Provider value={{ token, client: axios, user, logout }}>{children}</AuthContext.Provider>;
 };
 
 export default AuthProvider;

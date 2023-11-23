@@ -6,6 +6,7 @@ import Dashboard from './pages/Dashboard';
 import { QueryClient, QueryClientProvider } from 'react-query';
 import AuthProvider from './providers/auth';
 import { Editor } from './pages/Editor';
+import { Labs } from './pages/Labs';
 
 const queryClient = new QueryClient();
 
@@ -31,7 +32,8 @@ function App() {
 				<AuthProvider>
 					<Routes>
 						<Route path="/" element={<Dashboard />} />
-						<Route path="/solution/:solutionId" element={<Editor />} />
+						<Route path="/labs/:labId/solution" element={<Editor />} />
+						<Route path="/labs" element={<Labs />} />
 					</Routes>
 				</AuthProvider>
 			</QueryClientProvider>

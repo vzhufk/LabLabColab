@@ -13,9 +13,10 @@ import Tooltip from '@mui/material/Tooltip';
 import MenuItem from '@mui/material/MenuItem';
 import LaptopChromebookIcon from '@mui/icons-material/LaptopChromebook';
 import { AuthContext } from '../providers/auth';
+import { Link } from 'react-router-dom';
 
-const pages = ['Topics', 'Labs', 'Solutions'];
-const settings = ['Profile', 'Account', 'Dashboard', 'Logout'];
+const pages = ['Labs'];
+// const pages = ['Topics', 'Labs', 'Solutions'];
 
 function stringToColor(string: string) {
 	let hash = 0;
@@ -47,7 +48,7 @@ function stringAvatar(name: string) {
 }
 
 export const ResponsiveAppBar = () => {
-	const { user } = React.useContext(AuthContext);
+	const { user, logout } = React.useContext(AuthContext);
 	const [anchorElNav, setAnchorElNav] = React.useState(null);
 	const [anchorElUser, setAnchorElUser] = React.useState(null);
 
@@ -122,7 +123,7 @@ export const ResponsiveAppBar = () => {
 						>
 							{pages.map((page) => (
 								<MenuItem key={page} onClick={handleCloseNavMenu}>
-									<Typography textAlign="center">{page}</Typography>
+									<Link to={`/${page.toLowerCase()}`} style={{ textDecoration: 'none' }}><Typography textAlign="center">{page}</Typography></Link>
 								</MenuItem>
 							))}
 						</Menu>
@@ -148,9 +149,11 @@ export const ResponsiveAppBar = () => {
 					</Typography>
 					<Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>
 						{pages.map((page) => (
-							<Button key={page} onClick={handleCloseNavMenu} sx={{ my: 2, color: 'white', display: 'block' }}>
-								{page}
-							</Button>
+							<Link key={page} to={`/${page.toLowerCase()}`} style={{ textDecoration: 'none' }}>
+								<Button key={page} onClick={handleCloseNavMenu} sx={{ my: 2, color: 'white', display: 'block' }}>
+									{page}
+								</Button>
+							</Link>
 						))}
 					</Box>
 
@@ -176,11 +179,11 @@ export const ResponsiveAppBar = () => {
 							open={Boolean(anchorElUser)}
 							onClose={handleCloseUserMenu}
 						>
-							{settings.map((setting) => (
-								<MenuItem key={setting} onClick={handleCloseUserMenu}>
-									<Typography textAlign="center">{setting}</Typography>
+							{
+								<MenuItem key='logout' onClick={() => logout()}>
+									<Typography textAlign="center">Logout</Typography>
 								</MenuItem>
-							))}
+							}
 						</Menu>
 					</Box>
 				</Toolbar>

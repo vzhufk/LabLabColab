@@ -16,7 +16,7 @@ import AceEditor from 'react-ace';
 import { useMutation, useQuery } from 'react-query';
 import { Link, useParams } from 'react-router-dom';
 import { AuthContext } from '../providers/auth';
-import { StrapiBody } from '../models/stapi';
+import { StrapiBody, StrapiList } from '../models/stapi';
 import { Solution } from '../models/solution';
 import { Assignment } from '../models/assignment';
 import { Lab } from '../models/lab';
@@ -28,7 +28,7 @@ import NavigateNextIcon from '@mui/icons-material/NavigateNext';
 import { ResponsiveAppBar } from '../components/Menu';
 import { TabContext, TabList, TabPanel } from '@mui/lab';
 
-type SolutionWithPopulate = StrapiBody<
+type SolutionWithPopulate = StrapiList<
   Solution & {
     assignment: StrapiBody<
       Assignment & { lab: StrapiBody<Lab & { topic: StrapiBody<Topic & { course: StrapiBody<Course> }> }> }
@@ -37,31 +37,33 @@ type SolutionWithPopulate = StrapiBody<
 >;
 
 export const Editor = () => {
-	const { solutionId } = useParams();
+	const { labId } = useParams();
 	const auth = useContext(AuthContext);
 	const [tab, setTab] = React.useState('1');
 	const [code, setCode] = React.useState('');
 	const solution = useQuery(
-		['solution', solutionId],
+		['solution', 'lab', labId],
 		() =>
-			auth.client.get<SolutionWithPopulate>(`/solutions/${solutionId}`, {
-				params: { populate: ['assignment', 'assignment.lab', 'assignment.lab.topic', 'assignment.lab.topic.course'] }
+			auth.client.get<SolutionWithPopulate>('/solutions', {
+				params: { filter: { assignment: { lab: { $eq: labId }} }, populate: ['assignment', 'assignment.lab', 'assignment.lab.topic', 'assignment.lab.topic.course'] }
 			}),
 		{
-			enabled: !!solutionId
+			enabled: !!labId
 		}
 	);
-	const submit = useMutation(['solution', solutionId], () =>
-		auth.client.put(`/solutions/${solutionId}`, JSON.stringify({ data: { code } }), {
+	const submit = useMutation(['solution', solution.data?.data.data[0].id], () =>
+		auth.client.put(`/solutions/${solution.data?.data.data[0].id}`, JSON.stringify({ data: { code } }), {
 			headers: {
 				'Content-Type': 'application/json'
 			}
 		})
 	);
 
+	console.log(solution.data);
+
 	useEffect(() => {
 		if (solution.data) {
-			setCode(solution.data.data.data.attributes.code);
+			setCode(solution.data.data.data[0].attributes.code);
 		}
 	}, [solution.data]);
 
@@ -80,25 +82,29 @@ export const Editor = () => {
 										<Grid item>
 											<Breadcrumbs aria-label="breadcrumb" separator={<NavigateNextIcon fontSize="small" />}>
 												<Link
-													to={`/courses/${solution.data?.data.data.attributes.assignment.data.attributes.lab.data.attributes.topic.data.attributes.course.data.id}`}
+													style={{ textDecoration: 'none' }}
+													to={`/courses/${solution.data?.data.data[0].attributes.assignment.data.attributes.lab.data.attributes.topic.data.attributes.course.data.id}`}
 												>
 													{
-														solution.data?.data.data.attributes.assignment.data.attributes.lab.data.attributes.topic
+														solution.data?.data.data[0].attributes.assignment.data.attributes.lab.data.attributes.topic
 															.data.attributes.course.data.attributes.name
 													}
 												</Link>
 												<Link
-													to={`/topics/${solution.data?.data.data.attributes.assignment.data.attributes.lab.data.attributes.topic.data.id}`}
+													style={{ textDecoration: 'none' }}
+													to={`/topics/${solution.data?.data.data[0].attributes.assignment.data.attributes.lab.data.attributes.topic.data.id}`}
 												>
 													{
-														solution.data?.data.data.attributes.assignment.data.attributes.lab.data.attributes.topic
+														solution.data?.data.data[0].attributes.assignment.data.attributes.lab.data.attributes.topic
 															.data.attributes.title
 													}
 												</Link>
 												<Link
-													to={`/labs/${solution.data?.data.data.attributes.assignment.data.attributes.lab.data.id}`}
+													style={{ textDecoration: 'none' }}
+													to="/labs"
+													// to={`/labs/${solution.data?.data.data[0].attributes.assignment.data.attributes.lab.data.id}`}
 												>
-													{solution.data?.data.data.attributes.assignment.data.attributes.lab.data.attributes.title}
+													{solution.data?.data.data[0].attributes.assignment.data.attributes.lab.data.attributes.title}
 												</Link>
 											</Breadcrumbs>
 										</Grid>
@@ -114,7 +120,7 @@ export const Editor = () => {
 													<Typography>
 														<ReactMarkdown>
 															{
-																solution.data?.data.data.attributes.assignment.data.attributes.lab.data.attributes
+																solution.data?.data.data[0].attributes.assignment.data.attributes.lab.data.attributes
 																	.description
 															}
 														</ReactMarkdown>
@@ -143,7 +149,7 @@ export const Editor = () => {
 														<Grid item>
 															<Typography variant="body2">
 																{
-																	solution.data?.data.data.attributes.assignment.data.attributes.lab.data.attributes
+																	solution.data?.data.data[0].attributes.assignment.data.attributes.lab.data.attributes
 																		.input
 																}
 															</Typography>
@@ -154,7 +160,7 @@ export const Editor = () => {
 														<Grid item>
 															<Typography variant="body2">
 																{
-																	solution.data?.data.data.attributes.assignment.data.attributes.lab.data.attributes
+																	solution.data?.data.data[0].attributes.assignment.data.attributes.lab.data.attributes
 																		.output
 																}
 															</Typography>
@@ -165,7 +171,7 @@ export const Editor = () => {
 														<Grid item>
 															<Typography variant="body2">
 																{
-																	solution.data?.data.data.attributes.assignment.data.attributes.lab.data.attributes
+																	solution.data?.data.data[0].attributes.assignment.data.attributes.lab.data.attributes
 																		.explanation
 																}
 															</Typography>
@@ -209,7 +215,7 @@ export const Editor = () => {
 													<Typography variant="body1">Runtime:</Typography>
 												</Grid>
 												<Grid item>
-													<Typography variant="body1">{solution.data?.data.data.attributes.runtime}</Typography>
+													<Typography variant="body1">{solution.data?.data.data[0].attributes.runtime}</Typography>
 												</Grid>
 											</Grid>
 										</Grid>
@@ -219,7 +225,7 @@ export const Editor = () => {
 													<Typography variant="body1">Status:</Typography>
 												</Grid>
 												<Grid item>
-													<Typography variant="body1">{solution.data?.data.data.attributes.status}</Typography>
+													<Typography variant="body1">{solution.data?.data.data[0].attributes.status}</Typography>
 												</Grid>
 											</Grid>
 										</Grid>
@@ -230,7 +236,7 @@ export const Editor = () => {
 												</Grid>
 												<Grid item>
 													<Typography variant="body1">
-														{solution.data?.data.data.attributes.passed}/{solution.data?.data.data.attributes.total}
+														{solution.data?.data.data[0].attributes.passed}/{solution.data?.data.data[0].attributes.total}
 													</Typography>
 												</Grid>
 											</Grid>
