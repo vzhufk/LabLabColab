@@ -1,0 +1,44 @@
+{
+  "kind": "collectionType",
+  "collectionName": "solutions",
+  "info": {
+    "singularName": "solution",
+    "pluralName": "solutions",
+    "displayName": "solution",
+    "description": ""
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "runtime": {
+      "type": "enumeration",
+      "enum": [
+        "python"
+      ]
+    },
+    "passed": {
+      "type": "integer"
+    },
+    "total": {
+      "type": "integer"
+    },
+    "status": {
+      "type": "enumeration",
+      "enum": [
+        "PENDING",
+        "RUNNING",
+        "COMPLETED"
+      ]
+    },
+    "assignment": {
+      "type": "relation",
+      "relation": "oneToOne",
+      "target": "api::assignment.assignment"
+    },
+    "code": {
+      "type": "text"
+    }
+  }
+}

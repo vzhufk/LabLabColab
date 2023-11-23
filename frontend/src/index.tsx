@@ -8,6 +8,11 @@ import '@fontsource/roboto/300.css';
 import '@fontsource/roboto/400.css';
 import '@fontsource/roboto/500.css';
 import '@fontsource/roboto/700.css';
+
+import 'ace-builds/src-noconflict/mode-python';
+import 'ace-builds/src-noconflict/theme-terminal';
+import 'ace-builds/src-noconflict/ext-language_tools';
+
 import { BrowserRouter } from 'react-router-dom';
 
 const root = ReactDOM.createRoot(

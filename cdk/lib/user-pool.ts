@@ -3,7 +3,7 @@ import { Construct } from 'constructs';
 import { UserPool } from 'aws-cdk-lib/aws-cognito'
 import { CfnOutput } from 'aws-cdk-lib';
 
-export class UserPoolStack extends cdk.Stack {
+export class UserPoolStack extends cdk.NestedStack {
   public userPool: UserPool;
   constructor(scope: Construct, id: string, props?: cdk.StackProps) {
     super(scope, id, props);

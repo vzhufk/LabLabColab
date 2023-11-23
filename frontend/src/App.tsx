@@ -2,11 +2,10 @@ import React from 'react';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { Route, Routes } from 'react-router-dom';
 import './App.css';
-import { LogInSide } from './pages/Login';
 import Dashboard from './pages/Dashboard';
 import { QueryClient, QueryClientProvider } from 'react-query';
-import AuthProvider from './context/auth';
-import { ChangePassword } from './pages/ChangePassword';
+import AuthProvider from './providers/auth';
+import { Editor } from './pages/Editor';
 
 const queryClient = new QueryClient();
 
@@ -19,18 +18,20 @@ export const theme = createTheme({
 		secondary: {
 			main: '#e040fb'
 		}
+	},
+	shape: {
+		borderRadius: 0
 	}
 });
-
+	
 function App() {
 	return (
 		<ThemeProvider theme={theme}>
 			<QueryClientProvider client={queryClient}>
 				<AuthProvider>
 					<Routes>
-						<Route path="/" element={<LogInSide />} />
-						<Route path="/password" element={<ChangePassword />} />
-						<Route path="/dashboard" element={<Dashboard />} />
+						<Route path="/" element={<Dashboard />} />
+						<Route path="/solution/:solutionId" element={<Editor />} />
 					</Routes>
 				</AuthProvider>
 			</QueryClientProvider>

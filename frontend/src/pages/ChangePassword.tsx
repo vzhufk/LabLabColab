@@ -9,17 +9,11 @@ import Grid from '@mui/material/Grid';
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import Typography from '@mui/material/Typography';
 import { Copyright } from '../components/Copyright';
-import { AuthContext } from '../context/auth';
 import { useMutation } from 'react-query';
 import { CircularProgress } from '@mui/material';
-import { useNavigate } from 'react-router-dom';
 
 export const ChangePassword = () => {
-	const navigate = useNavigate();
-	const authContext = React.useContext(AuthContext);
-	const mutation = useMutation<void, { message: string }, { password: string }>(({ password }) =>
-		authContext.changePassword(localStorage.getItem('password') || '', password)
-	);
+	const mutation = useMutation<void, { message: string }, { password: string }>(() => Promise.resolve());
 	const [password, setPassword] = React.useState('');
 	const [passwordRepeat, setPasswordRepeat] = React.useState('');
 
@@ -29,11 +23,6 @@ export const ChangePassword = () => {
 	};
 
 	React.useEffect(() => {
-		if (mutation.isSuccess) {
-			authContext.signInWithEmail(localStorage.getItem('email') || '', password).then(() => {
-				navigate('dashboard');
-			});
-		}
 	}, [mutation.isSuccess]);
 
 	return (
@@ -97,14 +86,11 @@ export const ChangePassword = () => {
 								{mutation.isError ? <Typography color="error">Error: {mutation.error?.message}</Typography> : null}
 							</Box>
 						</Grid>
-						<Button
-							type="submit"
-							fullWidth
-							variant="contained"
-							sx={{ mt: 3, mb: 2 }}
+						
+						<Button type="submit" fullWidth variant="contained" sx={{ mt: 3, mb: 2 }} style={{ height: 50, fontSize: 15 }}
 							disabled={password !== passwordRepeat || !password || !passwordRepeat}
 						>
-							{mutation.isLoading ? <CircularProgress /> : 'Change Password'}
+							{mutation.isLoading ? <CircularProgress color="secondary" /> : 'Change Password'}
 						</Button>
 						<Copyright />
 					</Box>

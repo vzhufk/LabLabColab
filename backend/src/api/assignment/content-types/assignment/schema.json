@@ -1,0 +1,31 @@
+{
+  "kind": "collectionType",
+  "collectionName": "assignments",
+  "info": {
+    "singularName": "assignment",
+    "pluralName": "assignments",
+    "displayName": "Assignment",
+    "description": ""
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "lab": {
+      "type": "relation",
+      "relation": "oneToOne",
+      "target": "api::lab.lab"
+    },
+    "courseRun": {
+      "type": "relation",
+      "relation": "oneToOne",
+      "target": "api::course-run.course-run"
+    },
+    "student": {
+      "type": "relation",
+      "relation": "oneToOne",
+      "target": "plugin::users-permissions.user"
+    }
+  }
+}
